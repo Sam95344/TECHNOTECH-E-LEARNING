@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { API_ENDPOINTS } from '../config/api';
 import { Plus, Upload, X } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -58,7 +59,7 @@ const InstructorDashboard: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/courses', {
+      const response = await fetch(API_ENDPOINTS.COURSES.LIST, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

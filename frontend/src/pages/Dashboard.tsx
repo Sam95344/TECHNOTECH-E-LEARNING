@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { API_ENDPOINTS } from '../config/api';
 import { Link } from 'react-router-dom';
 import { BookOpen, Trophy, Clock, Star, TrendingUp, Award, FileQuestion } from 'lucide-react';
 import Header from '../components/Header';
@@ -54,7 +55,7 @@ const Dashboard: React.FC = () => {
   const fetchEnrollments = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/enroll', {
+      const res = await axios.get(API_ENDPOINTS.ENROLL.LIST, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setEnrollments(res.data);
@@ -66,7 +67,7 @@ const Dashboard: React.FC = () => {
   const fetchQuizzes = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/quiz/student', {
+      const res = await axios.get(API_ENDPOINTS.QUIZ.STUDENT, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setQuizzes(res.data);
@@ -92,7 +93,7 @@ const Dashboard: React.FC = () => {
     setUnenrollingCourse(enrollmentId);
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/enroll/${enrollmentId}`, {
+      await axios.delete(API_ENDPOINTS.ENROLL.DELETE(enrollmentId), {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert('Successfully unenrolled from the course');
@@ -320,7 +321,7 @@ const Dashboard: React.FC = () => {
                     <div className="flex space-x-3">
                       {enrollment.progress === 100 && enrollment.certificate && (
                         <a
-                          href={`http://localhost:5000/api/enroll/${enrollment._id}/certificate`}
+                          href={API_ENDPOINTS.ENROLL.CERTIFICATE(enrollment._id)}
                           className="text-emerald-400 hover:text-emerald-300 font-medium hover:underline text-sm transition-colors"
                           target="_blank"
                           rel="noopener noreferrer"

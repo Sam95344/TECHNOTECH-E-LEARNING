@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 import { useAuth } from '../context/AuthContext';
 import { Clock, CheckCircle, XCircle, ArrowRight, ArrowLeft } from 'lucide-react';
 import Header from '../components/Header';
@@ -58,7 +59,7 @@ const QuizPage: React.FC = () => {
   const fetchQuiz = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get(`http://localhost:5000/api/quiz/${id}`, {
+      const res = await axios.get(API_ENDPOINTS.QUIZ.DETAIL(id), {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -105,7 +106,7 @@ const QuizPage: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.post(`http://localhost:5000/api/quiz/${id}/submit`, {
+      const res = await axios.post(API_ENDPOINTS.QUIZ.SUBMIT(id), {
         answers
       }, {
         headers: { Authorization: `Bearer ${token}` }

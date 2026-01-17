@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { API_ENDPOINTS } from '../config/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Users, BookOpen, TrendingUp, DollarSign, Shield } from 'lucide-react';
@@ -86,13 +87,13 @@ const AdminDashboard: React.FC = () => {
     try {
       const token = localStorage.getItem('token');
       const [usersRes, coursesRes, quizzesRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/admin/users', {
+        axios.get(API_ENDPOINTS.ADMIN.USERS, {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        axios.get('http://localhost:5000/api/admin/courses', {
+        axios.get(API_ENDPOINTS.ADMIN.COURSES, {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        axios.get('http://localhost:5000/api/quiz', {
+        axios.get(API_ENDPOINTS.QUIZ.LIST, {
           headers: { Authorization: `Bearer ${token}` }
         })
       ]);
@@ -190,7 +191,7 @@ const AdminDashboard: React.FC = () => {
   const createCourse = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/admin/courses', courseForm, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.post(API_ENDPOINTS.ADMIN.COURSES, courseForm, { headers: { Authorization: `Bearer ${token}` } });
       setCourseForm({ title: '', description: '', category: '', level: 'Beginner', duration: '', price: 0, thumbnail: '', videos: [{ title: '', url: '', duration: '', type: 'recorded' }], liveClasses: [{ title: '', description: '', scheduledDate: '', duration: '', meetingLink: '' }], recordedSessions: [{ title: '', url: '', duration: '' }] });
       fetchAdminData();
       setActiveTab('courses');
@@ -221,7 +222,7 @@ const AdminDashboard: React.FC = () => {
     if (!editingCourseId) return;
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/admin/courses/${editingCourseId}`, courseForm, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.put(API_ENDPOINTS.ADMIN.COURSE_UPDATE(editingCourseId), courseForm, { headers: { Authorization: `Bearer ${token}` } });
       setEditingCourseId(null);
       setCourseForm({ title: '', description: '', category: '', level: 'Beginner', duration: '', price: 0, thumbnail: '', videos: [{ title: '', url: '', duration: '', type: 'recorded' }], liveClasses: [{ title: '', description: '', scheduledDate: '', duration: '', meetingLink: '' }], recordedSessions: [{ title: '', url: '', duration: '' }] });
       fetchAdminData();
@@ -233,7 +234,7 @@ const AdminDashboard: React.FC = () => {
   const deleteCourse = async (id: string) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/admin/courses/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.delete(API_ENDPOINTS.ADMIN.COURSE_DELETE(id), { headers: { Authorization: `Bearer ${token}` } });
       fetchAdminData();
     } catch (err) {
       console.error('Failed to delete course:', err);
@@ -286,7 +287,7 @@ const AdminDashboard: React.FC = () => {
   const createQuiz = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/quiz', quizForm, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.post(API_ENDPOINTS.QUIZ.CREATE, quizForm, { headers: { Authorization: `Bearer ${token}` } });
       setQuizForm({
         title: '',
         description: '',
@@ -324,7 +325,7 @@ const AdminDashboard: React.FC = () => {
     if (!editingQuizId) return;
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/quiz/${editingQuizId}`, quizForm, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.put(API_ENDPOINTS.QUIZ.UPDATE(editingQuizId), quizForm, { headers: { Authorization: `Bearer ${token}` } });
       setEditingQuizId(null);
       setQuizForm({
         title: '',
@@ -348,7 +349,7 @@ const AdminDashboard: React.FC = () => {
   const deleteQuiz = async (id: string) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/quiz/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.delete(API_ENDPOINTS.QUIZ.DELETE(id), { headers: { Authorization: `Bearer ${token}` } });
       fetchAdminData();
     } catch (err) {
       console.error('Failed to delete quiz:', err);

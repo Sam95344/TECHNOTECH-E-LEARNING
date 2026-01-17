@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Search, Filter, SortAsc, Grid, List, BookOpen, Clock, Users, Star, ShoppingCart, CheckCircle } from 'lucide-react';
+import { API_ENDPOINTS } from '../config/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useAuth } from '../context/AuthContext';
@@ -53,7 +54,7 @@ const Courses: React.FC = () => {
 
   const fetchCourses = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/courses');
+      const res = await axios.get(API_ENDPOINTS.COURSES.LIST);
       setCourses(res.data);
       setFilteredCourses(res.data);
     } catch (err) {
@@ -66,7 +67,7 @@ const Courses: React.FC = () => {
   const fetchEnrolledCourses = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/enroll', {
+      const res = await axios.get(API_ENDPOINTS.ENROLL.LIST, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const enrolledIds = res.data.map((enrollment: any) => enrollment.course._id);
@@ -85,7 +86,7 @@ const Courses: React.FC = () => {
 
     setEnrollingCourse(courseId);
     try {
-      await axios.post('http://localhost:5000/api/enroll', { courseId }, {
+      await axios.post(API_ENDPOINTS.ENROLL.CREATE, { courseId }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setEnrolledCourses(prev => [...prev, courseId]);

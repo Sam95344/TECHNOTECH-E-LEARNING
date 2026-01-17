@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 import { useAuth } from '../context/AuthContext';
 import { Star, Play, CheckCircle, Clock, Users, Award, BookOpen, ShoppingCart, CreditCard, Video, Calendar, FileVideo } from 'lucide-react';
 import Header from '../components/Header';
@@ -87,7 +88,7 @@ const CourseDetail: React.FC = () => {
     }
     try {
       console.log('fetchCourse: fetching course with id', id);
-      const res = await axios.get(`http://localhost:5000/api/courses/${id}`);
+      const res = await axios.get(API_ENDPOINTS.COURSES.DETAIL(id));
       console.log('fetchCourse: received course data', res.data);
       setCourse(res.data);
       setError(null);
@@ -111,7 +112,7 @@ const CourseDetail: React.FC = () => {
       }
 
       console.log('fetchEnrollment: fetching enrollments for user', user.id);
-      const res = await axios.get('http://localhost:5000/api/enroll', {
+      const res = await axios.get(API_ENDPOINTS.ENROLL.LIST, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -145,7 +146,7 @@ const CourseDetail: React.FC = () => {
     }
     setEnrolling(true);
     try {
-      await axios.post('http://localhost:5000/api/enroll', { courseId: id }, {
+      await axios.post(API_ENDPOINTS.ENROLL.CREATE, { courseId: id }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert('Enrolled successfully');
@@ -175,7 +176,7 @@ const CourseDetail: React.FC = () => {
 
     setUnenrolling(true);
     try {
-      await axios.delete(`http://localhost:5000/api/enroll/${enrollment._id}`, {
+      await axios.delete(API_ENDPOINTS.ENROLL.DELETE(enrollment._id), {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       alert('Successfully unenrolled from the course');
@@ -199,7 +200,7 @@ const CourseDetail: React.FC = () => {
       const progress = Math.round((completedLessons.length / course.videos.length) * 100);
 
       try {
-        await axios.put(`http://localhost:5000/api/enroll/${enrollment._id}/progress`, {
+        await axios.put(API_ENDPOINTS.ENROLL.PROGRESS(enrollment._id), {
           progress,
           completedLessons
         }, {
@@ -227,7 +228,7 @@ const CourseDetail: React.FC = () => {
 
     setSubmittingReview(true);
     try {
-      await axios.post(`http://localhost:5000/api/courses/${id}/rating`, {
+      await axios.post(API_ENDPOINTS.COURSES.RATING(id), {
         rating,
         review
       }, {
@@ -596,7 +597,7 @@ const CourseDetail: React.FC = () => {
                     </div>
                     <p className="text-green-700 dark:text-green-300 mb-4">Congratulations on completing this course! Download your certificate below.</p>
                     <a
-                      href={`http://localhost:5000/api/enroll/${enrollment._id}/certificate`}
+                      href={API_ENDPOINTS.ENROLL.CERTIFICATE(enrollment._id)}
                       className="inline-flex items-center bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"

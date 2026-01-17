@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -47,7 +48,7 @@ const Translate: React.FC = () => {
     setDetectedLang(null);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/translate', {
+      const res = await axios.post(API_ENDPOINTS.TRANSLATE, {
         text,
         source: sourceLang,
         target: targetLang,
